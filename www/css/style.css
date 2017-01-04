@@ -1,0 +1,112 @@
+/** Kiosk */
+.kiosk-article-title {
+  overflow: auto !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+}
+
+.kiosk-article-date {
+  font-size: 75% !important;
+  color: gray !important;
+}
+
+.kiosk-article-content {
+  font-size: 14px !important;
+}
+
+.kiosk-article-content p {
+  margin-bottom: 5px !important;
+}
+
+.list .kiosk-article-body {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.kiosk-image-container-crop {
+  width: 100%;
+  max-height: 240px;
+  overflow: hidden;
+}
+
+.kiosk-video-overlay {
+  /*background: url('img/play.png') center center no-repeat;*/
+  background: url('../img/play.png') center center no-repeat;
+  height: 128px;
+  left: 50%;
+  margin: -64px 0 0 -64px;
+  position: absolute;
+  top: 50%;
+  width: 128px;
+  z-index: 1;
+}
+
+.kiosk-video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+
+.kiosk-article-videos-list .kiosk-video-container {
+  margin: 10px;
+}
+
+.kiosk-video-container iframe, .kiosk-video-container object, .kiosk-video-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Scroll to top - See http://pointdeveloper.com/how-to-add-material-design-floating-action-button-to-ionic-framework-apps/*/
+.float-button {
+  background-color: #303f9f;
+  opacity: 0.9;
+  color: white;
+  border-radius: 50%;
+  /*border-radius:15% 0 0 0;*/
+  width: 30px;
+  padding: 25px;
+  font-size: 40px;
+  position: fixed;
+  bottom: 5%; /* Adjust height */
+  right: 5%; /* Adjust position */
+  z-index: 1000;
+}
+
+.float-button .height_fix {
+  margin-top: 100%;
+  border: 1px solid red;
+}
+
+.float-button .content {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  margin-top: -20px;
+  color: white;
+}
+
+/* Ionic */
+.card .item-avatar img {
+  border-radius: 4px !important;
+}
+
+.card {
+  margin: 10px 5px !important;
+}
+
+.card .item:last-child, .list-inset .item:last-child {
+  margin-bottom: -5px;
+}
+
+ion-content {
+  background: #e9ebee;
+}
+

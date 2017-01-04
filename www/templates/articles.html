@@ -1,0 +1,54 @@
+<ion-view view-title="Timeline">
+  <ion-nav-buttons side="left">
+
+  </ion-nav-buttons>
+
+  <ion-content on-scroll="getScrollPosition()">
+
+    <ion-refresher
+      pulling-text="Pull to refresh..."
+      on-refresh="reload()">
+    </ion-refresher>
+
+    <div class="list card" ng-repeat="article in articles" ng:click="read(article.id)" ng:click="read(article.id)">
+
+      <div class="item item-avatar">
+        <img ng:src="{{article.feed.logoUrl}}">
+
+        <p class="kiosk-article-date">
+          {{article.feed.name}} -
+          <time am-time-ago="article.publishedDate"></time>
+        </p>
+
+        <p class="kiosk-article-title">{{article.displayTitle}}</p>
+      </div>
+
+      <div class="item item-body kiosk-article-body" ng:if="article.mainImage">
+        <div class="kiosk-image-container-crop">
+          <img class="full-image" ng:src="{{article.mainImage.url}}">
+        </div>
+
+        <span class="kiosk-video-overlay" ng:if="article.videos"></span>
+      </div>
+
+    </div>
+
+
+    <ion-infinite-scroll
+      ng-if="canLoadMore()"
+      on-infinite="loadMore()"
+      distance="1%">
+      distance="1%">
+    </ion-infinite-scroll>
+
+  </ion-content>
+
+  <div class="float-button" ng-show="showScrollToTopButton" ng-click="scrollToTop()">
+	    <span class="height-fix">
+	  	  <a class="content">
+          <i class="ion-ios-arrow-up"> </i>
+        </a>
+	    </span>
+  </div>
+
+</ion-view>
