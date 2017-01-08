@@ -144,7 +144,7 @@ angular.module('starter.controllers', ['angularMoment'])
   /*                             FACTORY                                                  */
   /*                                                                                      */
   /* ==================================================================================== */
-  .service('kioskService', function ($http, moment) {
+  .service('kioskService', function ($http) {
     this.api = 'http://kiosk-api.tchepannou.io';
     this.articles = {};
 
@@ -152,29 +152,37 @@ angular.module('starter.controllers', ['angularMoment'])
       var url = this.api + '/v1/articles?page=' + page;
       var cache = this.articles;
 
-      $http.get(url, callback)
-        .then(function (response) {
-          console.log(url, response.data);
+      this.__get(url, function (data) {
+        for (var i = 0, len = data.articles.length; i < len; i++) {
+          var article = data.articles[i];
+          cache[article.id] = article;
+        }
 
-          for (var i = 0, len = response.data.articles.length; i < len; i++) {
-            var article = response.data.articles[i];
-            cache[article.id] = article;
-          }
-
-          callback(response.data.articles);
-        });
+        callback(data.articles);
+      });
     };
 
     this.get = function (id, callback) {
       var article = this.articles[id];
       console.log(id, article);
+      this.__get(article.contentUrl, function (data) {
+        callback(article, data);
+      });
+    }
 
-      $http.get(article.contentUrl)
+    this.__get = function (url, successCallback) {
+      $http.get(url)
+        .then(
+        function (response) {
+          console.log('GET ' + url, response.data);
 
-        .then(function (response) {
-          console.log(article.contentUrl, response.data);
-          callback(article, response.data);
-        });
+          successCallback(response.data);
+        },
+        function (error) {
+          console.log('ERROR ' + url, error);
+        }
+      );
+
     }
   })
 
