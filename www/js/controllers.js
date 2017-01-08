@@ -59,9 +59,10 @@ angular.module('starter.controllers', ['angularMoment'])
 
     /* ========= PUBLIC METHODS ============ */
     $scope.scrollToTop = function () { //ng-click for back to top button
-      $ionicScrollDelegate.scrollTop();
-      $scope.sttButton = false;  //hide the button when reached top
-      $scope.reload();  // Reload
+      $scope.reload(function () {
+        $ionicScrollDelegate.scrollTop();
+        $scope.sttButton = false;  //hide the button when reached top
+      });
     };
 
     $scope.getScrollPosition = function () {
@@ -84,11 +85,14 @@ angular.module('starter.controllers', ['angularMoment'])
       $location.path('/app/articles/' + id);
     };
 
-    $scope.reload = function () {
+    $scope.reload = function (callback) {
       $scope.page = 0;
       $scope.articles = [];
       $scope.__load(0, function () {
         $scope.$broadcast('scroll.refreshComplete');
+        if (callback) {
+          callback();
+        }
       });
     };
 
