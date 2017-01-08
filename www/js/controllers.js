@@ -61,6 +61,7 @@ angular.module('starter.controllers', ['angularMoment'])
     $scope.scrollToTop = function () { //ng-click for back to top button
       $ionicScrollDelegate.scrollTop();
       $scope.sttButton = false;  //hide the button when reached top
+      $scope.reload();  // Reload
     };
 
     $scope.getScrollPosition = function () {
