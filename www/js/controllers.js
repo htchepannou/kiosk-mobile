@@ -50,7 +50,7 @@ angular.module('starter.controllers', ['angularMoment'])
   })
 
 
-  .controller('ArticleListCtrl', function ($scope, $location, $ionicScrollDelegate, kioskService) {
+  .controller('ArticleListCtrl', function ($scope, $location, $ionicScrollDelegate, $cordovaSocialSharing, kioskService) {
     $scope.page = 0;
     $scope.more = false;
     $scope.articles = [];
@@ -58,6 +58,10 @@ angular.module('starter.controllers', ['angularMoment'])
 
 
     /* ========= PUBLIC METHODS ============ */
+    $scope.share = function (article) {
+      $cordovaSocialSharing.share(article.url, article.title, null, article.url);
+    };
+
     $scope.scrollToTop = function () { //ng-click for back to top button
       $scope.reload(function () {
         $ionicScrollDelegate.scrollTop();

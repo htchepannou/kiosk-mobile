@@ -10,9 +10,9 @@
       on-refresh="reload()">
     </ion-refresher>
 
-    <div class="list card" ng-repeat="article in articles" ng:click="read(article.id)" ng:click="read(article.id)">
+    <div class="list card" ng-repeat="article in articles">
 
-      <div class="item item-avatar">
+      <div class="item item-avatar" ng:click="read(article.id)">
         <img ng:src="{{article.feed.logoUrl}}">
 
         <p class="kiosk-article-date">
@@ -23,7 +23,7 @@
         <p class="kiosk-article-title">{{article.displayTitle}}</p>
       </div>
 
-      <div class="item item-body kiosk-article-body" ng:if="article.mainImage">
+      <div class="item item-body kiosk-article-body" ng:if="article.mainImage" ng:click="read(article.id)">
         <div class="kiosk-image-container-crop">
           <img class="full-image" ng:src="{{article.mainImage.url}}">
         </div>
@@ -31,6 +31,11 @@
         <span class="kiosk-video-overlay" ng:if="article.videos"></span>
       </div>
 
+      <div class="item">
+        <button ng:click="share(article)">
+          <i class="ion-share"></i>
+        </button>
+      </div>
     </div>
 
 
