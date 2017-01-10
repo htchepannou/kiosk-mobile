@@ -136,6 +136,8 @@ angular.module('starter.controllers', ['angularMoment'])
     $scope.article = {};
     $scope.content = '';
 
+
+    /* =========== MAIN ============= */
     kioskService.get($stateParams.articleId, function (article, content) {
       $scope.article = article;
       $scope.content = content;
