@@ -140,7 +140,7 @@ angular.module('starter.controllers', ['angularMoment'])
     /* =========== PUBLIC ============= */
     $scope.share = function (article) {
       $cordovaSocialSharing.share(article.url, article.title, null, article.url).then(
-        function (result) {
+        function () {
           $cordovaToast.show('Done', 'short', 'top');
         },
         function (error) {
