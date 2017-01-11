@@ -1,6 +1,5 @@
 <ion-view view-title="Timeline">
   <ion-nav-buttons side="left">
-
   </ion-nav-buttons>
 
   <ion-content on-scroll="getScrollPosition()">
@@ -27,15 +26,8 @@
         <div class="kiosk-image-container-crop">
           <img class="full-image" ng:src="{{article.mainImage.url}}">
         </div>
-
-        <span class="kiosk-video-overlay" ng:if="article.videos"></span>
       </div>
 
-      <div class="item">
-        <button ng:click="share(article)">
-          <i class="ion-share"></i>
-        </button>
-      </div>
     </div>
 
 

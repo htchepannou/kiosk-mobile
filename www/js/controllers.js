@@ -50,7 +50,7 @@ angular.module('starter.controllers', ['angularMoment'])
   })
 
 
-  .controller('ArticleListCtrl', function ($scope, $location, $ionicScrollDelegate, $cordovaSocialSharing, kioskService) {
+  .controller('ArticleListCtrl', function ($scope, $location, $ionicScrollDelegate, kioskService) {
     $scope.page = 0;
     $scope.more = false;
     $scope.articles = [];
@@ -58,10 +58,6 @@ angular.module('starter.controllers', ['angularMoment'])
 
 
     /* ========= PUBLIC METHODS ============ */
-    $scope.share = function (article) {
-      $cordovaSocialSharing.share(article.url, article.title, null, article.url);
-    };
-
     $scope.scrollToTop = function () { //ng-click for back to top button
       $scope.reload(function () {
         $ionicScrollDelegate.scrollTop();
@@ -136,9 +132,15 @@ angular.module('starter.controllers', ['angularMoment'])
 )
 
   .
-  controller('ArticleCtrl', function ($scope, $stateParams, kioskService) {
+  controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, kioskService) {
     $scope.article = {};
     $scope.content = '';
+
+
+    /* =========== PUBLIC ============= */
+    $scope.share = function (article) {
+      $cordovaSocialSharing.share(article.url, article.title, null, article.url);
+    };
 
 
     /* =========== MAIN ============= */
@@ -162,14 +164,16 @@ angular.module('starter.controllers', ['angularMoment'])
       var url = this.api + '/v1/articles?page=' + page;
       var cache = this.articles;
 
-      this.__get(url, function (data) {
-        for (var i = 0, len = data.articles.length; i < len; i++) {
-          var article = data.articles[i];
-          cache[article.id] = article;
-        }
+      this.__get(url,
+        function (data) {
+          for (var i = 0, len = data.articles.length; i < len; i++) {
+            var article = data.articles[i];
+            cache[article.id] = article;
+          }
 
-        callback(data.articles);
-      });
+          callback(data.articles);
+        }
+      );
     };
 
     this.get = function (id, callback) {
@@ -180,7 +184,7 @@ angular.module('starter.controllers', ['angularMoment'])
       });
     }
 
-    this.__get = function (url, successCallback) {
+    this.__get = function (url, successCallback, errorCallback) {
       $http.get(url)
         .then(
         function (response) {
@@ -190,6 +194,9 @@ angular.module('starter.controllers', ['angularMoment'])
         },
         function (error) {
           console.log('ERROR ' + url, error);
+          if (errorCallback) {
+            errorCallback(error);
+          }
         }
       );
 
