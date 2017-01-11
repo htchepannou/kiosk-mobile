@@ -132,14 +132,16 @@ angular.module('starter.controllers', ['angularMoment'])
 )
 
   .
-  controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, kioskService) {
+  controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, $cordovaToast, kioskService) {
     $scope.article = {};
     $scope.content = '';
 
 
     /* =========== PUBLIC ============= */
     $scope.share = function (article) {
-      $cordovaSocialSharing.share(article.url, article.title, null, article.url);
+      $cordovaSocialSharing.share(article.url, article.title, null, article.url).then(function () {
+        $cordovaToast.show('The article has been shared', 'short', 'top');
+      });
     };
 
 
