@@ -139,9 +139,18 @@ angular.module('starter.controllers', ['angularMoment'])
 
     /* =========== PUBLIC ============= */
     $scope.share = function (article) {
-      $cordovaSocialSharing.share(article.url, article.title, null, article.url).then(function () {
-        $cordovaToast.show('The article has been shared', 'short', 'top');
-      });
+      $cordovaSocialSharing.share(article.url, article.title, null, article.url).then(
+        function (result) {
+          $cordovaToast.show('Done', 'short', 'top');
+        },
+        function (error) {
+          $cordovaToast.show('Failed! ' + error, 'short', 'top');
+        }
+      );
+    };
+
+    $scope.navigate = function (article) {
+      window.open(article.url, '_blank');
     };
 
 
