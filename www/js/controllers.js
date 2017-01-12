@@ -149,10 +149,6 @@ angular.module('starter.controllers', ['angularMoment'])
       );
     };
 
-    $scope.navigate = function (article) {
-      window.open(article.url, '_blank');
-    };
-
 
     /* =========== MAIN ============= */
     kioskService.get($stateParams.articleId, function (article, content) {

@@ -1,9 +1,6 @@
 <ion-view view-title="">
   <ion-nav-buttons side="right">
     <div ng:click="share(article)" class="kiosk-nav-button ion-share"></div>
-    <a href="{{article.url}}">
-      <div class="kiosk-nav-button ion-android-navigate"></div>
-    </a>
   </ion-nav-buttons>
 
   <ion-content>
@@ -11,7 +8,7 @@
     <div class="card">
 
       <div class="item item-avatar">
-        <img ng:src="{{article.feed.logoUrl}}">
+        <img ng:src="{{article.feetd.logoUrl}}">
 
         <p class="kiosk-article-date">
           {{article.feed.name}} -
