@@ -18,14 +18,19 @@
         <h2 class="kiosk-article-title">{{article.displayTitle}}</h2>
       </div>
 
+
       <div class="item item-body">
-        <div class="kiosk-video-container" ng:if="article.videos">
+        <div class="kiosk-video-container" ng:if="article.videos" ng:if="!loading">
           <iframe ng:src="{{article.videos[0].embedUrl}}" frameborder="0" width="560" height="315"></iframe>
         </div>
 
         <img class="full-image" ng:src="{{article.mainImage.url}}" ng:if="article.mainImage && !article.videos">
 
-        <div class="kiosk-article-content" ng-bind-html="content | html"></div>
+        <div class="kiosk-spinner-container" ng:if="loading">
+          <ion-spinner></ion-spinner>
+        </div>
+
+        <div class="kiosk-article-content" ng-bind-html="content | html" ng:if="!loading"></div>
 
         <div class="kiosk-article-videos-list" ng:if="article.videos.length>1" ng-repeat="video in article.videos">
           <div class="kiosk-video-container" ng:if="video != article.videos[0]">

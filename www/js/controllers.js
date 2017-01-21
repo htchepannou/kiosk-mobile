@@ -110,7 +110,7 @@ angular.module('starter.controllers', ['angularMoment'])
     /* ========= PRIVATE METHODS ============ */
     $scope.__load = function (page, callback) {
       kioskService.list(page, function (articles) {
-        if (articles.length > 0) {
+        if (articles) {
           $scope.articles = $scope.articles.concat(articles);
           $scope.page = page;
           $scope.more = true;
@@ -134,6 +134,7 @@ angular.module('starter.controllers', ['angularMoment'])
   .
   controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, $cordovaToast, kioskService) {
     $scope.article = {};
+    $scope.loading = false;
     $scope.content = '';
 
 
@@ -151,10 +152,19 @@ angular.module('starter.controllers', ['angularMoment'])
 
 
     /* =========== MAIN ============= */
-    kioskService.get($stateParams.articleId, function (article, content) {
-      $scope.article = article;
-      $scope.content = content;
-    });
+    $scope.loading = true;
+
+    kioskService.get(
+      $stateParams.articleId,
+      function (article) {
+        $scope.article = article;
+      },
+
+      function (content) {
+        $scope.content = content;
+        $scope.loading = false;
+      }
+    );
   })
 
 
@@ -163,7 +173,7 @@ angular.module('starter.controllers', ['angularMoment'])
   /*                             FACTORY                                                  */
   /*                                                                                      */
   /* ==================================================================================== */
-  .service('kioskService', function ($http) {
+  .service('kioskService', function ($http, networkService) {
     this.api = 'http://kiosk-api.tchepannou.io';
     this.articles = {};
 
@@ -173,42 +183,67 @@ angular.module('starter.controllers', ['angularMoment'])
 
       this.__get(url,
         function (data) {
-          for (var i = 0, len = data.articles.length; i < len; i++) {
-            var article = data.articles[i];
-            cache[article.id] = article;
+
+          if (data) {
+            /* update the article cache */
+            for (var i = 0, len = data.articles.length; i < len; i++) {
+              var article = data.articles[i];
+              cache[article.id] = article;
+            }
+
+            callback(data.articles);
+          } else {
+            callback();
           }
 
-          callback(data.articles);
         }
       );
     };
 
-    this.get = function (id, callback) {
+    this.get = function (id, articleCallback, contentCallback) {
+
+      /* load article */
       var article = this.articles[id];
       console.log(id, article);
+      articleCallback(article);
+
+      /* load content */
       this.__get(article.contentUrl, function (data) {
-        callback(article, data);
+        contentCallback(data);
       });
-    }
+    };
 
     this.__get = function (url, successCallback, errorCallback) {
-      $http.get(url)
-        .then(
-        function (response) {
-          console.log('GET ' + url, response.data);
+      if (networkService.isOnline()) {
+        console.log('online');
+        $http.get(url)
+          .then(
+          function (response) {
+            console.log('GET ' + url, response.data);
 
-          successCallback(response.data);
-        },
-        function (error) {
-          console.log('ERROR ' + url, error);
-          if (errorCallback) {
-            errorCallback(error);
+            successCallback(response.data);
+          },
+          function (error) {
+            console.log('ERROR ' + url, error);
+            if (errorCallback) {
+              errorCallback(error);
+            }
           }
-        }
-      );
+        );
+      } else {
+        console.log('!!! offline');
+        successCallback();
+      }
 
     }
   })
+
+  .service('networkService', function ($cordovaNetwork) {
+    this.isOnline = function () {
+      return true; //$cordovaNetwork.isOnline();
+    };
+  })
+
 
   /* ==================================================================================== */
   /*                                                                                      */
