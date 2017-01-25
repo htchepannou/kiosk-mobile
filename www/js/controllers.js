@@ -238,7 +238,7 @@ angular.module('starter.controllers', ['angularMoment'])
     }
   })
 
-  .service('networkService', function ($cordovaNetwork) {
+  .service('networkService', function () {
     this.isOnline = function () {
       return true; //$cordovaNetwork.isOnline();
     };
