@@ -132,7 +132,7 @@ angular.module('starter.controllers', ['angularMoment'])
 )
 
   .
-  controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, $cordovaToast, kioskService) {
+  controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, kioskService) {
     $scope.article = {};
     $scope.loading = false;
     $scope.content = '';
@@ -140,16 +140,12 @@ angular.module('starter.controllers', ['angularMoment'])
 
     /* =========== PUBLIC ============= */
     $scope.share = function (article) {
-      $cordovaSocialSharing.share(article.url, article.title, null, article.url).then(
-        function () {
-          $cordovaToast.show('Done', 'short', 'top');
-        },
-        function (error) {
-          $cordovaToast.show('Failed! ' + error, 'short', 'top');
-        }
-      );
+      $cordovaSocialSharing.share(article.url, article.title, null, article.url);
     };
 
+    $scope.navigate = function (article) {
+      window.open(article.url, '_system', 'location=no');
+    };
 
     /* =========== MAIN ============= */
     $scope.loading = true;
