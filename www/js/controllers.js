@@ -50,7 +50,7 @@ angular.module('starter.controllers', ['angularMoment'])
   })
 
 
-  .controller('ArticleListCtrl', function ($scope, $location, $ionicScrollDelegate, kioskService) {
+  .controller('TimelineCtrl', function ($scope, $location, $ionicScrollDelegate, kioskService, trackingService) {
     $scope.page = 0;
     $scope.more = false;
     $scope.articles = [];
@@ -81,8 +81,7 @@ angular.module('starter.controllers', ['angularMoment'])
     };
 
     $scope.read = function (id) {
-      console.log('read', id);
-      $location.path('/app/articles/' + id);
+      $location.path('/app/article/' + id);
     };
 
     $scope.reload = function (callback) {
@@ -123,16 +122,16 @@ angular.module('starter.controllers', ['angularMoment'])
         }
       });
 
+      trackingService.push('Timeline.Load', 'Page.Timeline', -1, page);
     };
 
 
     /* ========= MAIN ============ */
     $scope.reload();
-  }
-)
+  })
 
-  .
-  controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, kioskService) {
+
+  .controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, kioskService, trackingService) {
     $scope.article = {};
     $scope.loading = false;
     $scope.content = '';
@@ -141,26 +140,35 @@ angular.module('starter.controllers', ['angularMoment'])
     /* =========== PUBLIC ============= */
     $scope.share = function (article) {
       $cordovaSocialSharing.share(article.url, article.title, null, article.url);
+      trackingService.push('Article.Share', 'Page.Article', article.id);
     };
 
     $scope.navigate = function (article) {
       window.open(article.url, '_system', 'location=no');
+      trackingService.push('Article.Navigate', 'Page.Article', article.id, article.url);
     };
 
+    $scope.open = function () {
+      $scope.loading = true;
+
+      kioskService.get(
+        $stateParams.articleId,
+        function (article) {
+          $scope.article = article;
+        },
+
+        function (content) {
+          $scope.content = content;
+          $scope.loading = false;
+        }
+      );
+
+      trackingService.push('Article.Open', 'Page.Article', $stateParams.articleId);
+    };
+
+
     /* =========== MAIN ============= */
-    $scope.loading = true;
-
-    kioskService.get(
-      $stateParams.articleId,
-      function (article) {
-        $scope.article = article;
-      },
-
-      function (content) {
-        $scope.content = content;
-        $scope.loading = false;
-      }
-    );
+    $scope.open();
   })
 
 
@@ -197,10 +205,8 @@ angular.module('starter.controllers', ['angularMoment'])
     };
 
     this.get = function (id, articleCallback, contentCallback) {
-
       /* load article */
       var article = this.articles[id];
-      console.log(id, article);
       articleCallback(article);
 
       /* load content */
@@ -211,12 +217,9 @@ angular.module('starter.controllers', ['angularMoment'])
 
     this.__get = function (url, successCallback, errorCallback) {
       if (networkService.isOnline()) {
-        console.log('online');
         $http.get(url)
           .then(
           function (response) {
-            console.log('GET ' + url, response.data);
-
             successCallback(response.data);
           },
           function (error) {
@@ -229,6 +232,50 @@ angular.module('starter.controllers', ['angularMoment'])
       } else {
         console.log('!!! offline');
         successCallback();
+      }
+
+    }
+  })
+
+  .service('trackingService', function ($cordovaDevice) {
+    this.push = function (name, page, articleId, param1, param2) {
+      try {
+
+        var evt = {
+          name: name,
+          page: page,
+          articleId: articleId,
+          timestamp: Date.now(),
+          param1: param1 ? param1 : null,
+          param2: param2 ? param2 : null,
+          device: this.device
+        };
+
+        console.log('event', JSON.stringify(evt));
+
+      } catch (e) {
+        // Ignore - We don't want the tracking to make any transaction fails!
+        console.log('ERROR', e);
+      }
+
+    };
+
+    this.device = function () {
+      try {
+
+        return {
+
+          uuid: $cordovaDevice.getUUID(),
+          manufacturer: $cordovaDevice.getManufacturer(),
+          model: $cordovaDevice.getModel(),
+          platform: $cordovaDevice.getPlatform(),
+          version: $cordovaDevice.getVersion()
+
+        };
+
+      } catch (e) {
+        // Ignore - This will fail in the browser
+        return null;
       }
 
     }

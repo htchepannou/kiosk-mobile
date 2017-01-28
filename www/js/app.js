@@ -34,17 +34,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
       })
 
       .state('app.articles', {
-        url: '/articles',
+        url: '/timeline',
         views: {
           'menuContent': {
             templateUrl: 'templates/articles.html',
-            controller: 'ArticleListCtrl'
+            controller: 'TimelineCtrl'
           }
         }
       })
 
       .state('app.article', {
-        url: '/articles/:articleId',
+        url: '/article/:articleId',
         views: {
           'menuContent': {
             templateUrl: 'templates/article.html',
@@ -55,7 +55,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova'])
 
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/articles');
+    $urlRouterProvider.otherwise('/app/timeline');
 
     // trusted urls
     $sceDelegateProvider.resourceUrlWhitelist([
