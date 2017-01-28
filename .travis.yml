@@ -11,3 +11,4 @@ install:
 
 script:
   - ionic upload --email=$IONIC_EMAIL --password=$IONIC_PASSWORD
+
