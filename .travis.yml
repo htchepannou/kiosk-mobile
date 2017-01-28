@@ -1,0 +1,13 @@
+sudo: false
+
+language: node_js
+node_js:
+  - "6"
+
+install:
+  - npm install -g gulp bower cordova ionic
+  - npm install
+  - bower update
+
+script:
+  - ionic upload --email=$IONIC_EMAIL --password=$IONIC_PASSWORD
