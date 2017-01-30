@@ -50,7 +50,7 @@ angular.module('starter.controllers', ['angularMoment'])
   })
 
 
-  .controller('TimelineCtrl', function ($scope, $location, $ionicScrollDelegate, kioskService, trackingService) {
+  .controller('TimelineCtrl', function ($scope, $location, $ionicScrollDelegate, articleService, eventService) {
     $scope.page = 0;
     $scope.more = false;
     $scope.articles = [];
@@ -108,7 +108,7 @@ angular.module('starter.controllers', ['angularMoment'])
 
     /* ========= PRIVATE METHODS ============ */
     $scope.__load = function (page, callback) {
-      kioskService.list(page, function (articles) {
+      articleService.list(page, function (articles) {
         if (articles) {
           $scope.articles = $scope.articles.concat(articles);
           $scope.page = page;
@@ -122,7 +122,7 @@ angular.module('starter.controllers', ['angularMoment'])
         }
       });
 
-      trackingService.push('Timeline.Load', 'Page.Timeline', -1, page);
+      eventService.push('Timeline.Load', 'Page.Timeline', -1, page);
     };
 
 
@@ -131,7 +131,7 @@ angular.module('starter.controllers', ['angularMoment'])
   })
 
 
-  .controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, kioskService, trackingService) {
+  .controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, articleService, eventService) {
     $scope.article = {};
     $scope.loading = false;
     $scope.content = '';
@@ -140,18 +140,18 @@ angular.module('starter.controllers', ['angularMoment'])
     /* =========== PUBLIC ============= */
     $scope.share = function (article) {
       $cordovaSocialSharing.share(article.url, article.title, null, article.url);
-      trackingService.push('Article.Share', 'Page.Article', article.id);
+      eventService.push('Article.Share', 'Page.Article', article.id);
     };
 
     $scope.navigate = function (article) {
       window.open(article.url, '_system', 'location=no');
-      trackingService.push('Article.Navigate', 'Page.Article', article.id, article.url);
+      eventService.push('Article.Navigate', 'Page.Article', article.id, article.url);
     };
 
     $scope.open = function () {
       $scope.loading = true;
 
-      kioskService.get(
+      articleService.get(
         $stateParams.articleId,
         function (article) {
           $scope.article = article;
@@ -163,7 +163,7 @@ angular.module('starter.controllers', ['angularMoment'])
         }
       );
 
-      trackingService.push('Article.Open', 'Page.Article', $stateParams.articleId);
+      eventService.push('Article.Open', 'Page.Article', $stateParams.articleId);
     };
 
 
@@ -177,8 +177,8 @@ angular.module('starter.controllers', ['angularMoment'])
   /*                             FACTORY                                                  */
   /*                                                                                      */
   /* ==================================================================================== */
-  .service('kioskService', function ($http, networkService) {
-    this.api = 'http://kiosk-api.tchepannou.io';
+  .service('articleService', function ($http, networkService, configService) {
+    this.api = configService.api;
     this.articles = {};
 
     this.list = function (page, callback) {
@@ -237,7 +237,9 @@ angular.module('starter.controllers', ['angularMoment'])
     }
   })
 
-  .service('trackingService', function ($cordovaDevice) {
+  .service('eventService', function ($http, $cordovaDevice, configService) {
+    this.api = configService.api;
+
     this.push = function (name, page, articleId, param1, param2) {
       try {
 
@@ -251,7 +253,15 @@ angular.module('starter.controllers', ['angularMoment'])
           device: this.device
         };
 
-        console.log('event', JSON.stringify(evt));
+        var url = this.api + '/v1/event';
+        $http.post(url, evt).then(
+          function () {
+            console.log('POST ', url, JSON.stringify(evt));
+          },
+          function (err) {
+            console.log('POST ', url, JSON.stringify(evt), err);
+          }
+        );
 
       } catch (e) {
         // Ignore - We don't want the tracking to make any transaction fails!
@@ -287,6 +297,9 @@ angular.module('starter.controllers', ['angularMoment'])
     };
   })
 
+  .service('configService', function () {
+    this.api = 'http://kiosk-api.tchepannou.io';
+  })
 
   /* ==================================================================================== */
   /*                                                                                      */
