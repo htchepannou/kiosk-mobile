@@ -103,7 +103,7 @@ angular.module('starter.controllers', ['angularMoment'])
 
     $scope.canLoadMore = function () {
       return $scope.more;
-    }
+    };
 
 
     /* ========= PRIVATE METHODS ============ */
@@ -151,17 +151,11 @@ angular.module('starter.controllers', ['angularMoment'])
     $scope.open = function () {
       $scope.loading = true;
 
-      articleService.get(
-        $stateParams.articleId,
-        function (article) {
-          $scope.article = article;
-        },
-
-        function (content) {
-          $scope.content = content;
-          $scope.loading = false;
-        }
-      );
+      $scope.article = articleService.getArticle($stateParams.articleId);
+      articleService.loadContent($scope.article, function (content) {
+        $scope.content = content;
+        $scope.loading = false;
+      });
 
       eventService.push('Article.Open', 'Page.Article', $stateParams.articleId);
     };
@@ -177,22 +171,22 @@ angular.module('starter.controllers', ['angularMoment'])
   /*                             FACTORY                                                  */
   /*                                                                                      */
   /* ==================================================================================== */
-  .service('articleService', function ($http, networkService, configService) {
+  .service('articleService', function ($http, configService) {
     this.api = configService.api;
     this.articles = {};
 
     this.list = function (page, callback) {
       var url = this.api + '/v1/articles?page=' + page;
-      var cache = this.articles;
+      var me = this;
 
-      this.__get(url,
+      this.httpGet(url,
         function (data) {
 
           if (data) {
             /* update the article cache */
             for (var i = 0, len = data.articles.length; i < len; i++) {
               var article = data.articles[i];
-              cache[article.id] = article;
+              me.dbPut(article.id + '_meta', JSON.stringify(article));
             }
 
             callback(data.articles);
@@ -204,37 +198,47 @@ angular.module('starter.controllers', ['angularMoment'])
       );
     };
 
-    this.get = function (id, articleCallback, contentCallback) {
-      /* load article */
-      var article = this.articles[id];
-      articleCallback(article);
-
-      /* load content */
-      this.__get(article.contentUrl, function (data) {
-        contentCallback(data);
-      });
+    this.getArticle = function (id) {
+      return JSON.parse(this.dbGet(id + '_meta'));
     };
 
-    this.__get = function (url, successCallback, errorCallback) {
-      if (networkService.isOnline()) {
-        $http.get(url)
-          .then(
-          function (response) {
-            successCallback(response.data);
-          },
-          function (error) {
-            console.log('ERROR ' + url, error);
-            if (errorCallback) {
-              errorCallback(error);
-            }
-          }
-        );
+    this.loadContent = function (article, callback) {
+      var key = article.id + '_content';
+      var content = this.dbGet(key);
+      if (content) {
+        callback(content);
       } else {
-        console.log('!!! offline');
-        successCallback();
+        var me = this;
+        this.httpGet(article.contentUrl, function (data) {
+          me.dbPut(id, data);
+          callback(data);
+        });
       }
+    };
 
-    }
+    this.httpGet = function (url, successCallback, errorCallback) {
+      console.log('GET ' + url);
+      $http.get(url)
+        .then(
+        function (response) {
+          successCallback(response.data);
+        },
+        function (error) {
+          console.log('ERROR ' + url, error);
+          if (errorCallback) {
+            errorCallback(error);
+          }
+        }
+      );
+    };
+
+    this.dbPut = function (key, value) {
+      window.localStorage.setItem('kiosk_' + key, value);
+    };
+
+    this.dbGet = function (key) {
+      return window.localStorage.getItem('kiosk_' + key);
+    };
   })
 
   .service('eventService', function ($http, $cordovaDevice, configService) {
@@ -289,12 +293,6 @@ angular.module('starter.controllers', ['angularMoment'])
       }
 
     }
-  })
-
-  .service('networkService', function () {
-    this.isOnline = function () {
-      return true; //$cordovaNetwork.isOnline();
-    };
   })
 
   .service('configService', function () {
