@@ -152,6 +152,8 @@ angular.module('starter.controllers', ['angularMoment'])
       $scope.loading = true;
 
       $scope.article = articleService.getArticle($stateParams.articleId);
+
+      console.log('loading content...');
       articleService.loadContent($scope.article, function (content) {
         $scope.content = content;
         $scope.loading = false;
@@ -171,13 +173,12 @@ angular.module('starter.controllers', ['angularMoment'])
   /*                             FACTORY                                                  */
   /*                                                                                      */
   /* ==================================================================================== */
-  .service('articleService', function ($http, configService) {
+  .service('articleService', function ($http, configService, dbService) {
     this.api = configService.api;
     this.articles = {};
 
     this.list = function (page, callback) {
       var url = this.api + '/v1/articles?page=' + page;
-      var me = this;
 
       this.httpGet(url,
         function (data) {
@@ -186,7 +187,7 @@ angular.module('starter.controllers', ['angularMoment'])
             /* update the article cache */
             for (var i = 0, len = data.articles.length; i < len; i++) {
               var article = data.articles[i];
-              me.dbPut(article.id + '_meta', JSON.stringify(article));
+              dbService.put(article.id + '_meta', JSON.stringify(article));
             }
 
             callback(data.articles);
@@ -199,18 +200,19 @@ angular.module('starter.controllers', ['angularMoment'])
     };
 
     this.getArticle = function (id) {
-      return JSON.parse(this.dbGet(id + '_meta'));
+      return JSON.parse(dbService.get(id + '_meta'));
     };
 
     this.loadContent = function (article, callback) {
       var key = article.id + '_content';
-      var content = this.dbGet(key);
+      var content = dbService.get(key);
       if (content) {
+        console.log('content of ' + article.url + ' loaded from cache');
         callback(content);
       } else {
-        var me = this;
         this.httpGet(article.contentUrl, function (data) {
-          me.dbPut(id, data);
+          console.log('content of ' + article.url + ' loaded from server');
+          dbService.put(key, data);
           callback(data);
         });
       }
@@ -231,46 +233,38 @@ angular.module('starter.controllers', ['angularMoment'])
         }
       );
     };
-
-    this.dbPut = function (key, value) {
-      window.localStorage.setItem('kiosk_' + key, value);
-    };
-
-    this.dbGet = function (key) {
-      return window.localStorage.getItem('kiosk_' + key);
-    };
   })
 
   .service('eventService', function ($http, $cordovaDevice, configService) {
     this.api = configService.api;
 
     this.push = function (name, page, articleId, param1, param2) {
-      try {
-
-        var evt = {
-          name: name,
-          page: page,
-          articleId: articleId,
-          timestamp: Date.now(),
-          param1: param1 ? param1 : null,
-          param2: param2 ? param2 : null,
-          device: this.device
-        };
-
-        var url = this.api + '/v1/event';
-        $http.post(url, evt).then(
-          function () {
-            console.log('POST ', url, JSON.stringify(evt));
-          },
-          function (err) {
-            console.log('POST ', url, JSON.stringify(evt), err);
-          }
-        );
-
-      } catch (e) {
-        // Ignore - We don't want the tracking to make any transaction fails!
-        console.log('ERROR', e);
-      }
+      //try {
+      //
+      //  var evt = {
+      //    name: name,
+      //    page: page,
+      //    articleId: articleId,
+      //    timestamp: Date.now(),
+      //    param1: param1 ? param1 : null,
+      //    param2: param2 ? param2 : null,
+      //    device: this.device
+      //  };
+      //
+      //  var url = this.api + '/v1/event';
+      //  $http.post(url, evt).then(
+      //    function () {
+      //      console.log('POST ', url, JSON.stringify(evt));
+      //    },
+      //    function (err) {
+      //      console.log('POST ', url, JSON.stringify(evt), err);
+      //    }
+      //  );
+      //
+      //} catch (e) {
+      //  // Ignore - We don't want the tracking to make any transaction fails!
+      //  console.log('ERROR', e);
+      //}
 
     };
 
@@ -293,6 +287,17 @@ angular.module('starter.controllers', ['angularMoment'])
       }
 
     }
+  })
+
+  .service('dbService', function () {
+    this.put = function (key, value) {
+      window.localStorage.setItem('kiosk_' + key, value);
+    };
+
+    this.get = function (key) {
+      return window.localStorage.getItem('kiosk_' + key);
+    };
+
   })
 
   .service('configService', function () {

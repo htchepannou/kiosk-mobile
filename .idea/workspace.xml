@@ -2,36 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="587285c8-43dd-4b7e-ba76-604296679b70" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/.bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/CODE_OF_CONDUCT.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/CONTRIBUTING.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/ISSUE_TEMPLATE.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/TESTING.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/component.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb-next.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.fruitdown.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.fruitdown.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.localstorage.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.localstorage.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.memory.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.memory.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/dist/pouchdb.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/lib/index-browser.es.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/lib/index-browser.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/lib/index.es.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/lib/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/src/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/src/next.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/src/pouchdb-browser.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/lib/pouchdb/src/pouchdb.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/js/controllers.js" afterPath="$PROJECT_DIR$/www/js/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/index.html" afterPath="$PROJECT_DIR$/www/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="kiosk-mobile.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,18 +27,12 @@
       <file leaf-file-name="controllers.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/www/js/controllers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5727848">
-              <caret line="229" column="11" selection-start-line="229" selection-start-column="11" selection-end-line="229" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.5435294">
+              <caret line="211" column="14" selection-start-line="211" selection-start-column="14" selection-end-line="211" selection-end-column="14" />
               <folding>
                 <element signature="e#3362#3764#0" expanded="false" />
-                <element signature="e#5537#6054#0" expanded="false" />
-                <element signature="e#6206#6512#0" expanded="false" />
-                <element signature="e#6951#7016#0" expanded="false" />
-                <element signature="e#7051#7116#0" expanded="false" />
-                <element signature="e#7199#8435#0" expanded="false" />
-                <element signature="e#8039#8431#0" expanded="false" />
-                <element signature="e#8478#8532#0" expanded="false" />
-                <element signature="e#9044#9129#0" expanded="false" />
+                <element signature="e#8763#8817#0" expanded="false" />
+                <element signature="e#9329#9414#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -838,12 +803,12 @@
       <workItem from="1485632086314" duration="1481000" />
       <workItem from="1485635173375" duration="1547000" />
       <workItem from="1485781246268" duration="4571000" />
-      <workItem from="1485832197642" duration="9895000" />
+      <workItem from="1485832197642" duration="10789000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94095000" />
+    <option name="totallyTimeSpent" value="94989000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="131" y="113" width="1279" height="777" extended-state="0" />
@@ -852,7 +817,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30131003" sideWeight="0.4963437" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30131003" sideWeight="0.4963437" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896653" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24954297" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1239,18 +1204,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/www/js/controllers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5727848">
-          <caret line="229" column="11" selection-start-line="229" selection-start-column="11" selection-end-line="229" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.5435294">
+          <caret line="211" column="14" selection-start-line="211" selection-start-column="14" selection-end-line="211" selection-end-column="14" />
           <folding>
             <element signature="e#3362#3764#0" expanded="false" />
-            <element signature="e#5537#6054#0" expanded="false" />
-            <element signature="e#6206#6512#0" expanded="false" />
-            <element signature="e#6951#7016#0" expanded="false" />
-            <element signature="e#7051#7116#0" expanded="false" />
-            <element signature="e#7199#8435#0" expanded="false" />
-            <element signature="e#8039#8431#0" expanded="false" />
-            <element signature="e#8478#8532#0" expanded="false" />
-            <element signature="e#9044#9129#0" expanded="false" />
+            <element signature="e#8763#8817#0" expanded="false" />
+            <element signature="e#9329#9414#0" expanded="false" />
           </folding>
         </state>
       </provider>
