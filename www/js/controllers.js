@@ -8,7 +8,7 @@ angular.module('starter.controllers', ['angularMoment'])
   /* ==================================================================================== */
 
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
+  .controller('AppCtrl', function ($scope, $ionicModal, $timeout, connectivityMonitor) {
 
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -47,6 +47,8 @@ angular.module('starter.controllers', ['angularMoment'])
         $scope.closeLogin();
       }, 1000);
     };
+
+    connectivityMonitor.startWatching();
   })
 
 
@@ -55,7 +57,6 @@ angular.module('starter.controllers', ['angularMoment'])
     $scope.more = false;
     $scope.articles = [];
     $scope.showScrollToTopButton = false;
-
 
     /* ========= PUBLIC METHODS ============ */
     $scope.scrollToTop = function () { //ng-click for back to top button
@@ -131,10 +132,11 @@ angular.module('starter.controllers', ['angularMoment'])
   })
 
 
-  .controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, articleService, eventService) {
+  .controller('ArticleCtrl', function ($scope, $stateParams, $cordovaSocialSharing, articleService, eventService, connectivityMonitor) {
     $scope.article = {};
-    $scope.loading = false;
     $scope.content = '';
+    $scope.isLoading = false;
+    $scope.isOffline = connectivityMonitor.isOffline();
 
 
     /* =========== PUBLIC ============= */
@@ -149,14 +151,14 @@ angular.module('starter.controllers', ['angularMoment'])
     };
 
     $scope.open = function () {
-      $scope.loading = true;
+      $scope.isLoading = true;
 
       $scope.article = articleService.getArticle($stateParams.articleId);
 
       console.log('loading content...');
       articleService.loadContent($scope.article, function (content) {
         $scope.content = content;
-        $scope.loading = false;
+        $scope.isLoading = false;
       });
 
       eventService.push('Article.Open', 'Page.Article', $stateParams.articleId);
@@ -173,14 +175,12 @@ angular.module('starter.controllers', ['angularMoment'])
   /*                             FACTORY                                                  */
   /*                                                                                      */
   /* ==================================================================================== */
-  .service('articleService', function ($http, configService, dbService) {
-    this.api = configService.api;
+  .service('articleService', function ($http, dbService, httpService, connectivityMonitor) {
     this.articles = {};
 
     this.list = function (page, callback) {
-      var url = this.api + '/v1/articles?page=' + page;
 
-      this.httpGet(url,
+      httpService.get('/v1/articles?page=' + page,
         function (data) {
 
           if (data) {
@@ -210,61 +210,40 @@ angular.module('starter.controllers', ['angularMoment'])
         console.log('content of ' + article.url + ' loaded from cache');
         callback(content);
       } else {
-        this.httpGet(article.contentUrl, function (data) {
-          console.log('content of ' + article.url + ' loaded from server');
-          dbService.put(key, data);
-          callback(data);
+        httpService.get(article.contentUrl, function (data) {
+          if (data) {
+            console.log('content from ' + article.url + ' loaded from server');
+            dbService.put(key, data);
+            callback(data);
+          } else {
+            console.log('!!! No content from ' + article.url + '. We maybe offline');
+          }
         });
       }
     };
-
-    this.httpGet = function (url, successCallback, errorCallback) {
-      console.log('GET ' + url);
-      $http.get(url)
-        .then(
-        function (response) {
-          successCallback(response.data);
-        },
-        function (error) {
-          console.log('ERROR ' + url, error);
-          if (errorCallback) {
-            errorCallback(error);
-          }
-        }
-      );
-    };
   })
 
-  .service('eventService', function ($http, $cordovaDevice, configService) {
-    this.api = configService.api;
+  .service('eventService', function ($http, $cordovaDevice, httpService) {
 
     this.push = function (name, page, articleId, param1, param2) {
-      //try {
-      //
-      //  var evt = {
-      //    name: name,
-      //    page: page,
-      //    articleId: articleId,
-      //    timestamp: Date.now(),
-      //    param1: param1 ? param1 : null,
-      //    param2: param2 ? param2 : null,
-      //    device: this.device
-      //  };
-      //
-      //  var url = this.api + '/v1/event';
-      //  $http.post(url, evt).then(
-      //    function () {
-      //      console.log('POST ', url, JSON.stringify(evt));
-      //    },
-      //    function (err) {
-      //      console.log('POST ', url, JSON.stringify(evt), err);
-      //    }
-      //  );
-      //
-      //} catch (e) {
-      //  // Ignore - We don't want the tracking to make any transaction fails!
-      //  console.log('ERROR', e);
-      //}
+      try {
+
+        var evt = {
+          name: name,
+          page: page,
+          articleId: articleId,
+          timestamp: Date.now(),
+          param1: param1 ? param1 : null,
+          param2: param2 ? param2 : null,
+          device: this.device
+        };
+
+        //httpService.post('/v1/event', evt);
+
+      } catch (e) {
+        // Ignore - We don't want the tracking to make any transaction fails!
+        console.log('ERROR', e);
+      }
 
     };
 
@@ -300,8 +279,93 @@ angular.module('starter.controllers', ['angularMoment'])
 
   })
 
+  .service('httpService', function ($http, configService, connectivityMonitor) {
+    this.api = configService.api;
+
+    this.get = function (path, callback) {
+      if (connectivityMonitor.isOffline()) {
+        console.log('Network is offline');
+        if (callback) {
+          callback();
+        }
+        return;
+      }
+
+      var url = path.startsWith('http') ? path : this.api + path;
+      console.log('GET ' + url);
+      $http.get(url)
+        .then(
+        function (response) {
+          if (callback) {
+            callback(response.data);
+          }
+        })
+        .catch(function (err) {
+          console.log('ERROR ' + url, err);
+        });
+    };
+
+    this.post = function (path, data) {
+      if (connectivityMonitor.isOffline()) {
+        console.log('Network is offline');
+        return;
+      }
+
+      var url = this.api + path;
+      $http.post(url, data).then(
+        function () {
+          console.log('POST ', url, JSON.stringify(data));
+        }
+      );
+    }
+  })
+
   .service('configService', function () {
     this.api = 'http://kiosk-api.tchepannou.io';
+  })
+
+  .factory('connectivityMonitor', function ($rootScope, $cordovaNetwork) {
+
+    return {
+      isOnline: function () {
+        if (ionic.Platform.isWebView()) {
+          return $cordovaNetwork.isOnline();
+        } else {
+          return navigator.onLine;
+        }
+      },
+      isOffline: function () {
+        if (ionic.Platform.isWebView()) {
+          return !$cordovaNetwork.isOnline();
+        } else {
+          return !navigator.onLine;
+        }
+      },
+
+      startWatching: function () {
+        if (ionic.Platform.isWebView()) {
+
+          $rootScope.$on('$cordovaNetwork:online', function (event, networkState) {
+            console.log("went online");
+          });
+
+          $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
+            console.log("went offline");
+          });
+
+        }
+        else {
+
+          window.addEventListener("online", function (e) {
+            console.log("went online");
+          }, false);
+
+          window.addEventListener("offline", function (e) {
+            console.log("went offline");
+          }, false);
+        }
+      }
+    }
   })
 
   /* ==================================================================================== */
