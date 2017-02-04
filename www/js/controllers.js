@@ -232,16 +232,20 @@ angular.module('starter.controllers', ['angularMoment'])
       var key = article.id + '_content';
       var content = dbService.get(key);
       if (content) {
+
         console.log('ArticleService - Loading content from DB ', article.url);
         callback(content);
+
       } else {
+
+        console.log('ArticleService - Loading content from server', article.url);
         httpService.get(article.contentUrl, function (data) {
           if (data) {
-            console.log('ArticleService - Loading content from server', article.url);
             dbService.put(key, data);
             callback(data);
           }
         });
+
       }
     };
   })
