@@ -20,13 +20,7 @@
       </div>
 
 
-      <div class="item item-body" ng:if="isOffline">
-        <p class="kiosk-offline">
-          <i class="ion-android-cloud-outline"></i> You are offline
-        </p>
-      </div>
-
-      <div class="item item-body" ng:if="!isOffline">
+      <div class="item item-body">
         <div class="kiosk-video-container" ng:if="article.videos" ng:if="!isLoading">
           <iframe ng:src="{{article.videos[0].embedUrl}}" frameborder="0" width="560" height="315"></iframe>
         </div>
