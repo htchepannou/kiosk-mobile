@@ -265,7 +265,7 @@ angular.module('starter.controllers', ['angularMoment'])
           device: this.device
         };
 
-        //httpService.post('/v1/event', evt);
+        httpService.post('/v1/event', evt);
 
       } catch (e) {
         // Ignore - We don't want the tracking to make any transaction fails!
