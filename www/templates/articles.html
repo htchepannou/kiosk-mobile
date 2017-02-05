@@ -1,4 +1,4 @@
-<ion-view view-title="Timeline">
+<ion-view view-title="News Timeline">
   <ion-nav-buttons side="left">
   </ion-nav-buttons>
 
@@ -8,11 +8,6 @@
       pulling-text="Pull to refresh..."
       on-refresh="reload()">
     </ion-refresher>
-    <!--
-        <div class="card" ng-if="!isOnline">
-          !!!OFFLINE!!!
-        </div>
-        -->
 
     <div class="list card" ng-repeat="article in articles">
 
