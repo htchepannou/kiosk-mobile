@@ -23,9 +23,12 @@
 
 
       <div class="item item-body">
+
+        <!--
         <div class="kiosk-video-container" ng:if="article.videos" ng:if="!isLoading">
           <iframe ng:src="{{article.videos[0].embedUrl}}" frameborder="0" width="560" height="315"></iframe>
         </div>
+        -->
 
         <img class="full-image" ng:src="{{article.mainImage.url}}" ng:if="article.mainImage && !article.videos">
 
@@ -35,11 +38,14 @@
 
         <div class="kiosk-article-content" ng-bind-html="content | html" ng:if="!isLoading"></div>
 
+        <!--
         <div class="kiosk-article-videos-list" ng:if="article.videos.length>1" ng-repeat="video in article.videos">
           <div class="kiosk-video-container" ng:if="video != article.videos[0]">
             <iframe ng:src="{{video.embedUrl}}" frameborder="0" width="560" height="315"></iframe>
           </div>
         </div>
+        -->
+
       </div>
 
 
