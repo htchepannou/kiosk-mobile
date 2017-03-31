@@ -3,12 +3,12 @@ angular.module('starter.controllers', ['angularMoment'])
 
   /* ==================================================================================== */
   /*                                                                                      */
-  /*                             CONTROLLERs                                              */
+  /*                             CONTROLLERS                                              */
   /*                                                                                      */
   /* ==================================================================================== */
 
 
-  .controller('AppCtrl', function ($scope, $ionicModal, $timeout) {
+  .controller('AppCtrl', function (/*$scope, $ionicModal, $timeout,*/ $ionicPlatform, eventService) {
 
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
@@ -17,37 +17,46 @@ angular.module('starter.controllers', ['angularMoment'])
     //$scope.$on('$ionicView.enter', function(e) {
     //});
 
-    // Form data for the login modal
-    $scope.loginData = {};
-
-    // Create the login modal that we will use later
-    $ionicModal.fromTemplateUrl('templates/login.html', {
-      scope: $scope
-    }).then(function (modal) {
-      $scope.modal = modal;
+    $ionicPlatform.on('resume', function () {
+      eventService.push('Device.Resume');
     });
 
-    // Triggered in the login modal to close it
-    $scope.closeLogin = function () {
-      $scope.modal.hide();
-    };
+    $ionicPlatform.on('pause', function () {
+      eventService.push('Device.Pause');
+    });
 
-    // Open the login modal
-    $scope.login = function () {
-      $scope.modal.show();
-    };
+    /*
+     // Form data for the login modal
+     $scope.loginData = {};
 
-    // Perform the login action when the user submits the login form
-    $scope.doLogin = function () {
-      console.log('Doing login', $scope.loginData);
+     // Create the login modal that we will use later
+     $ionicModal.fromTemplateUrl('templates/login.html', {
+     scope: $scope
+     }).then(function (modal) {
+     $scope.modal = modal;
+     });
 
-      // Simulate a login delay. Remove this and replace with your login
-      // code if using a login system
-      $timeout(function () {
-        $scope.closeLogin();
-      }, 1000);
-    };
+     // Triggered in the login modal to close it
+     $scope.closeLogin = function () {
+     $scope.modal.hide();
+     };
 
+     // Open the login modal
+     $scope.login = function () {
+     $scope.modal.show();
+     };
+
+     // Perform the login action when the user submits the login form
+     $scope.doLogin = function () {
+     console.log('Doing login', $scope.loginData);
+
+     // Simulate a login delay. Remove this and replace with your login
+     // code if using a login system
+     $timeout(function () {
+     $scope.closeLogin();
+     }, 1000);
+     };
+     */
   })
 
 
@@ -137,7 +146,7 @@ angular.module('starter.controllers', ['angularMoment'])
 
       articleService.list(page, success, error);
 
-      eventService.push('Timeline.Load', 'Page.Timeline', -1, page);
+      eventService.push('Timeline.Load', 'Page.Timeline', page);
     };
 
 
@@ -173,7 +182,7 @@ angular.module('starter.controllers', ['angularMoment'])
         $scope.isLoading = false;
       });
 
-      eventService.push('Article.Open', 'Page.Article', $stateParams.articleId);
+      eventService.push('Article.Read', 'Page.Article', $stateParams.articleId);
     };
 
 
@@ -252,14 +261,13 @@ angular.module('starter.controllers', ['angularMoment'])
 
   .service('eventService', function ($http, $cordovaDevice, httpService) {
 
-    this.push = function (name, page, articleId, param1, param2) {
+    this.push = function (name, page, param1, param2) {
       try {
 
         var evt = {
           name: name,
-          page: page,
-          articleId: articleId,
           timestamp: Date.now(),
+          page: page ? page : null,
           param1: param1 ? param1 : null,
           param2: param2 ? param2 : null,
           device: this.device
@@ -313,8 +321,7 @@ angular.module('starter.controllers', ['angularMoment'])
       var url = path.lastIndexOf('http', 0) == 0 ? path : this.api + path;
       console.log('GET ' + url);
       $http.get(url)
-        .then(
-        function (response) {
+        .then(function (response) {
           if (callback) {
             callback(response.data);
           }
