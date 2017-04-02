@@ -164,36 +164,38 @@ angular.module('starter.controllers', ['angularMoment'])
 
     /* =========== PUBLIC ============= */
     $scope.shareFacebook = function () {
-      var message = $scope.article.title;
-      var link = $scope.article.url;
-      var image = $scope.article.thumbnailImage ? $scope.article.thumbnailImage.url : null;
-
-      $cordovaSocialSharing.shareViaFacebook(message, image, link)
-        .then(function () {
-          eventService.push('Article.Share.Facebook', 'Page.Article', article.id);
-        },
-        function (err) {
-          console.log(err);
-        });
+      $scope.__share('Facebook');
     };
 
     $scope.shareTwitter = function () {
+      $scope.__share('Twitter');
+    };
+
+    $scope.shareWhatsApp = function () {
+      $scope.__share('WhatsApp');
+    };
+
+    $scope.__share = function (where) {
       var message = $scope.article.title;
       var link = $scope.article.url;
       var image = $scope.article.thumbnailImage ? $scope.article.thumbnailImage.url : null;
+      var success = function () {
+        eventService.push('Article.Share.' + where, 'Page.Article', $scope.article.id);
+      };
+      var error = function (err) {
+        console.log(err);
+      };
 
-      $cordovaSocialSharing.shareViaTwitter(message, image, link)
-        .then(function () {
-          eventService.push('Article.Share.Twitter', 'Page.Article', article.id);
-        },
-        function (err) {
-          console.log(err);
-        });
-    };
-
-    $scope.share = function (article) {
-      $cordovaSocialSharing.share(article.url, article.title, null, article.url);
-      eventService.push('Article.Share', 'Page.Article', article.id);
+      if (where == 'Facebook') {
+        $cordovaSocialSharing.shareViaFacebook(message, image, link)
+          .then(success, error);
+      } else if (where == 'Twitter') {
+        $cordovaSocialSharing.shareViaTwitter(message, image, link)
+          .then(success, error);
+      } else if (where == 'WhatsApp') {
+        $cordovaSocialSharing.shareViaWhatsApp(message, image, link)
+          .then(success, error);
+      }
     };
 
     $scope.navigate = function (article) {
