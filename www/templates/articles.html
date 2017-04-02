@@ -22,13 +22,13 @@
         <p class="kiosk-article-title">{{article.displayTitle}}</p>
       </div>
 
-      <div class="item item-body kiosk-article-body" ng:if="article.mainImage" ng:click="read(article.id)">
+      <div class="item item-body kiosk-article-body" ng:if="article.thumbnailImage" ng:click="read(article.id)">
         <div class="kiosk-image-container-crop">
-          <img class="full-image" ng:src="{{article.mainImage.url}}">
+          <img class="full-image" ng:src="{{article.thumbnailImage.url}}">
         </div>
-      <!--
-        <span class="kiosk-video-overlay" ng:if="article.videos"></span>
-        -->
+        <!--
+          <span class="kiosk-video-overlay" ng:if="article.videos"></span>
+          -->
       </div>
 
     </div>

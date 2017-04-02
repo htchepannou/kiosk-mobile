@@ -121,6 +121,7 @@ angular.module('starter.controllers', ['angularMoment'])
     /* ========= PRIVATE METHODS ============ */
     $scope.__load = function (page, callback) {
       var success = function (articles) {
+        console.log(articles);
         if (articles && articles.length > 0) {
           $scope.articles = $scope.articles.concat(articles);
           $scope.page = page;
@@ -162,6 +163,34 @@ angular.module('starter.controllers', ['angularMoment'])
 
 
     /* =========== PUBLIC ============= */
+    $scope.shareFacebook = function () {
+      var message = $scope.article.title;
+      var link = $scope.article.url;
+      var image = $scope.article.thumbnailImage ? $scope.article.thumbnailImage.url : null;
+
+      $cordovaSocialSharing.shareViaFacebook(message, image, link)
+        .then(function () {
+          eventService.push('Article.Share.Facebook', 'Page.Article', article.id);
+        },
+        function (err) {
+          console.log(err);
+        });
+    };
+
+    $scope.shareTwitter = function () {
+      var message = $scope.article.title;
+      var link = $scope.article.url;
+      var image = $scope.article.thumbnailImage ? $scope.article.thumbnailImage.url : null;
+
+      $cordovaSocialSharing.shareViaTwitter(message, image, link)
+        .then(function () {
+          eventService.push('Article.Share.Twitter', 'Page.Article', article.id);
+        },
+        function (err) {
+          console.log(err);
+        });
+    };
+
     $scope.share = function (article) {
       $cordovaSocialSharing.share(article.url, article.title, null, article.url);
       eventService.push('Article.Share', 'Page.Article', article.id);

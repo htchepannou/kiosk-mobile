@@ -82,6 +82,20 @@
   text-align: center;
 }
 
+.kiosk-button-social {
+  width: 48px;
+  margin-right: .5em;
+  color: #fff !important;
+}
+
+.kiosk-button-facebook {
+  background: #3b5998;
+}
+
+.kiosk-button-twitter {
+  background: #6d84b4;
+}
+
 /* Scroll to top - See http://pointdeveloper.com/how-to-add-material-design-floating-action-button-to-ionic-framework-apps/*/
 .float-button {
   background-color: #303f9f;
@@ -129,5 +143,9 @@
 
 ion-content {
   background: #36465d;
+}
+
+.bar-footer .buttons {
+  margin: 0 auto !important;
 }
 

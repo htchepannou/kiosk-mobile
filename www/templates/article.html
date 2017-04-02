@@ -1,11 +1,4 @@
 <ion-view view-title="">
-  <ion-nav-buttons side="right">
-    <div ng:click="navigate(article)" class="kiosk-nav-button ion-navigate"></div>
-    <!--
-    <div ng:click="share(article)" class="kiosk-nav-button ion-android-share-alt"></div>
-    -->
-  </ion-nav-buttons>
-
   <ion-content>
 
     <div class="card">
@@ -30,7 +23,7 @@
         </div>
         -->
 
-        <img class="full-image" ng:src="{{article.mainImage.url}}" ng:if="article.mainImage && !article.videos">
+        <img class="full-image" ng:src="{{article.thumbnailImage.url}}" ng:if="article.thumbnailImage">
 
         <div class="kiosk-spinner-container" ng:if="isLoading">
           <ion-spinner></ion-spinner>
@@ -53,4 +46,14 @@
 
 
   </ion-content>
+
+  <ion-footer-bar align-title="center">
+
+    <div class="buttons">
+      <button class="button kiosk-button-facebook kiosk-button-social" ng:click="shareFacebook()"><i class="ion-social-facebook"></i></button>
+      <button class="button kiosk-button-twitter kiosk-button-social" ng:click="shareTwitter()"><i class="ion-social-twitter"></i></button>
+    </div>
+
+  </ion-footer-bar>
+
 </ion-view>
